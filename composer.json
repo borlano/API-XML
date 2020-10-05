@@ -1,0 +1,28 @@
+
+{
+    "name": "borlano/API-XML",
+    "type": "extension",
+    "description": "RBS 360 API XML",
+    "keywords": [
+        "rbs360",
+        "xml",
+        "api"
+    ],
+    "homepage": "https://github.com/borlano/API-XML",
+    "license": "MIT License",
+    "authors": [
+        {
+            "name": "Alexey Arabadzhi",
+            "email": "borlano7@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "borlano\\API_XML\\": "src/"
+        }
+    },
+    "require": {
+        "php": "7.*"
+    }
+}

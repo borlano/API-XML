@@ -1,4 +1,5 @@
 ﻿<?php
+  namespace borlano\XML_API;
 	/**
 		* Вспомогательный класс для работы с XML API программы RBS360
 		* Документация API: https://developers.rbs360.ru/integraciya-api-xml/
