@@ -1,6 +1,6 @@
 
 {
-    "name": "borlano/API-XML",
+    "name": "borlano/api-xml",
     "type": "extension",
     "description": "RBS 360 API XML",
     "keywords": [
@@ -8,7 +8,7 @@
         "xml",
         "api"
     ],
-    "homepage": "https://github.com/borlano/API-XML",
+    "homepage": "https://github.com/borlano/api-xml",
     "license": "MIT License",
     "authors": [
         {
@@ -19,7 +19,7 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "borlano\\API_XML\\": "src/"
+            "borlano\\api_xml\\": "src/"
         }
     },
     "require": {
