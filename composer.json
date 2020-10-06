@@ -23,6 +23,9 @@
         }
     },
     "require": {
-        "php": "7.*"
+        "php": "7.*",
+        "ext-curl": "*",
+        "ext-http": "*",
+        "ext-simplexml": "*"
     }
 }
