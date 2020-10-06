@@ -1,5 +1,5 @@
 <?php
-namespace borlano\XML_API;
+namespace borlano\api_xml;
 
 use http\Exception;
 use SimpleXMLElement;
