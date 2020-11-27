@@ -2,9 +2,7 @@
 
 namespace borlano\api_xml;
 
-use http\Exception;
 use SimpleXMLElement;
-use Throwable;
 
 /**
  * Вспомогательный класс для работы с XML API программы RBS360
@@ -49,6 +47,9 @@ class Xml_api
         return "<?xml version='1.0' encoding='utf8' ?><request>";
     }
 
+    /**
+     * @return string
+     */
     public function footer()
     {
         return '</request>';
@@ -66,8 +67,7 @@ class Xml_api
 			</action>'
             .$this->footer();
 
-        $response = $this->send($this->url, 'POST', ['xml' => $request]);
-        if ($response_parse = self::_parse($response)) {
+        if ($response_parse = $this->send($this->url, 'POST', ['xml' => $request])) {
             $this->sess_id = $response_parse->action->sess_id;
         }
     }
@@ -80,7 +80,7 @@ class Xml_api
      * @param array  $args
      * @param array  $cookie
      *
-     * @return bool|string
+     * @return SimpleXMLElement
      */
     public function send($url, $method = 'GET', $args = [], $cookie = [])
     {
@@ -117,22 +117,7 @@ class Xml_api
 
         $resp = curl_exec($ch);
 
-        return $resp;
-    }
-
-    /**
-     *    Парсинг xml c помощью библиотеки SimpleXMLElement.
-     *
-     * @param $xml
-     *
-     * @return SimpleXMLElement
-     */
-    private static function _parse($xml)
-    {
-        try {
-            return new SimpleXMLElement($xml);
-        } catch (Throwable $e) {
-        }
+        return new SimpleXMLElement($resp);
     }
 
     /**
@@ -169,7 +154,7 @@ class Xml_api
 			</action>'
             .$this->footer();
 
-        return $this->_parse($this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]));
+        return $this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]);
     }
 
     /**
@@ -276,7 +261,32 @@ class Xml_api
 			</action>'
             .$this->footer();
 
-        return $this->_parse($this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]));
+        return $this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]);
+    }
+
+    /**
+     * Массовое добавление записей.
+     *
+     * @param $structure
+     * @param $records
+     *
+     * @return SimpleXMLElement
+     */
+    public function massAdd($structure, $records)
+    {
+        $request = $this->head()
+            ."<action type='add' uid='80085'>";
+
+        foreach ($records as $record) {
+            $request .= "<structure name='".$structure."'>".'
+			    '.$this->_prepareFields($record).'     								
+			</structure>';
+        }
+
+        $request .= '</action>'
+            .$this->footer();
+
+        return $this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]);
     }
 
     /**
@@ -294,7 +304,7 @@ class Xml_api
 			</action>'
             .$this->footer();
 
-        return $this->_parse($this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]));
+        return $this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]);
     }
 
     /**
@@ -310,7 +320,7 @@ class Xml_api
 			</action>"
             .$this->footer();
 
-        return $this->_parse($this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]));
+        return $this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]);
     }
 
     /**
@@ -333,7 +343,32 @@ class Xml_api
 			</action>'
             .$this->footer();
 
-        return $this->_parse($this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]));
+        return $this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]);
+    }
+
+    /**
+     * Массовое обновление записей.
+     *
+     * @param $structure
+     * @param $records
+     *
+     * @return SimpleXMLElement
+     */
+    public function massUpdate($structure, $records)
+    {
+        $request = $this->head()
+            ."<action type='edit' uid='80085'>";
+        foreach ($records as $record) {
+            $request .= "<structure name='".$structure."'>"
+                .$this->_prepareFields($record['fields'])
+                .$this->_prepareFilters($record['filters'])
+                .'</structure>';
+        }
+
+        $request .= '</action>'
+            .$this->footer();
+
+        return $this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]);
     }
 
     /**
@@ -353,6 +388,6 @@ class Xml_api
 			</action>"
             .$this->footer();
 
-        return $this->_parse($this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]));
+        return $this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]);
     }
 }
