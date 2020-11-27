@@ -4,6 +4,7 @@ namespace borlano\api_xml;
 
 use http\Exception;
 use SimpleXMLElement;
+use Throwable;
 
 /**
  * Вспомогательный класс для работы с XML API программы RBS360
@@ -130,7 +131,7 @@ class Xml_api
     {
         try {
             return new SimpleXMLElement($xml);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
         }
     }
 
@@ -157,17 +158,16 @@ class Xml_api
      */
     public function select($structure, $fields = [], $filters = [], $limits = [], $orders = [])
     {
-        $request = "<?xml version='1.0' encoding='utf8' ?>
-			<request>
-			<action type='list' uid='80085'>
+        $request = $this->head()
+            ."<action type='list' uid='80085'>
 			<structure name='".$structure."'>".'
 			'.$this->_prepareFields($fields).'
 			'.$this->_prepareFilters($filters).'
 			'.$this->_prepareOrders($orders).'
 			'.$this->_prepareLimits($limits).'     								
 			</structure>
-			</action>
-			</request>';
+			</action>'
+            .$this->footer();
 
         return $this->_parse($this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]));
     }
@@ -268,14 +268,13 @@ class Xml_api
      */
     public function add($structure, $fields = [])
     {
-        $request = "<?xml version='1.0' encoding='utf8' ?>
-			<request>
-			<action type='add' uid='80085'>
+        $request = $this->head()
+            ."<action type='add' uid='80085'>
 			<structure name='".$structure."'>".'
 			'.$this->_prepareFields($fields).'     								
 			</structure>
-			</action>
-			</request>';
+			</action>'
+            .$this->footer();
 
         return $this->_parse($this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]));
     }
@@ -289,12 +288,11 @@ class Xml_api
      */
     public function fileAdd($structure, $id, $fields = [])
     {
-        $request = "<?xml version='1.0' encoding='utf8' ?>
-			<request>
-			<action type='fileAdd' uid='80085'>
+        $request = $this->head()
+            ."<action type='fileAdd' uid='80085'>
 			<structure name='".$structure."' id='".$id."'>".$this->_prepareFields($fields).'</structure>
-			</action>
-			</request>';
+			</action>'
+            .$this->footer();
 
         return $this->_parse($this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]));
     }
@@ -306,12 +304,11 @@ class Xml_api
      */
     public function paymentCalc($id)
     {
-        $request = "<?xml version='1.0' encoding='utf8' ?>
-			<request>
-			<action type='paymentCalc' uid='80085'>
+        $request = $this->head()
+            ."<action type='paymentCalc' uid='80085'>
 			<structure id='".$id."'></structure>
-			</action>
-			</request>";
+			</action>"
+            .$this->footer();
 
         return $this->_parse($this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]));
     }
@@ -327,15 +324,14 @@ class Xml_api
      */
     public function update($structure, $fields = [], $filters = [])
     {
-        $request = "<?xml version='1.0' encoding='utf8' ?>
-			<request>
-			<action type='edit' uid='80085'>
+        $request = $this->head()
+            ."<action type='edit' uid='80085'>
 			<structure name='".$structure."'>".'
 			'.$this->_prepareFields($fields).'
 			'.$this->_prepareFilters($filters).'     								
 			</structure>
-			</action>
-			</request>';
+			</action>'
+            .$this->footer();
 
         return $this->_parse($this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]));
     }
@@ -350,13 +346,12 @@ class Xml_api
      */
     public function delete($structure, $id)
     {
-        $request = "<?xml version='1.0' encoding='utf8' ?>
-			<request>
-			<action type='wipe' uid='80085'>
+        $request = $this->head()
+            ."<action type='wipe' uid='80085'>
 			<structure name='".$structure."' id='".$id."'>     								
 			</structure>
-			</action>
-			</request>";
+			</action>"
+            .$this->footer();
 
         return $this->_parse($this->send($this->url, 'POST', ['xml' => $request], ['sess_id' => $this->sess_id]));
     }
