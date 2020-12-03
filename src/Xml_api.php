@@ -24,19 +24,47 @@ class Xml_api
 
     private $sess_id;
 
+    private static $instance;
+
+    /**
+     * Xml_api constructor.
+     */
+    private function __construct()
+    {
+    }
+
+    private function __clone()
+    {
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function __wakeup()
+    {
+        throw new \Exception('Cannot unserialize singleton');
+    }
+
     /**
      * Создание подключения и получение sess_id.
      *
      * @param $url
      * @param $login
      * @param $pass
+     *
+     * @return static
      */
-    public function __construct($url, $login, $pass)
+    public static function getInstance($url, $login, $pass)
     {
-        $this->url = $url;
-        $this->login = $login;
-        $this->pass = $pass;
-        $this->_auth();
+        if (!self::$instance) {
+            self::$instance = new static();
+            self::$instance->url = $url;
+            self::$instance->login = $login;
+            self::$instance->pass = $pass;
+            self::$instance->_auth();
+        }
+
+        return self::$instance;
     }
 
     /**
