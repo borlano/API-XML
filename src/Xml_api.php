@@ -117,6 +117,26 @@ class Xml_api
 
         $resp = curl_exec($ch);
 
+        //так как ответ не всегда приходит валидным, а как несколько xml объектов
+        //делаем его валидным объединяя все в один объект
+        /*<?xml version="1.0" encoding="utf8" ?>*/
+        // <response>
+        //   <action type="add" uid="80085">
+        //     <status>true</status>
+        //     <id>4967</id>
+        //   </action>
+        // </response>
+        /*<?xml version="1.0" encoding="utf8" ?>*/
+        // <response>
+        //   <action type="add" uid="80085">
+        //     <status>true</status>
+        //     <id>4968</id>
+        //   </action>
+        // </response>
+        $resp = str_replace(['<?xml version="1.0" encoding="utf8" ?>', '<response>', '</response>'], '', $resp);
+
+        $resp = '<?xml version="1.0" encoding="utf8" ?><response>'.$resp.'</response>';
+
         return new SimpleXMLElement($resp);
     }
 
